@@ -15,7 +15,7 @@ export default class MyDocument extends Document {
     return (
       <html>
         <Head>
-          <title>My page</title>
+          <title>Jitta Bingo!</title>
           {this.props.styleTags}
           <link
             rel="stylesheet"
@@ -24,6 +24,11 @@ export default class MyDocument extends Document {
             crossorigin="anonymous"
           />
           <link rel="stylesheet" href="/static/shards.min.css" />
+          <link
+            rel="stylesheet"
+            type="text/css"
+            href="http://csshake.surge.sh/csshake.min.css"
+          />
         </Head>
         <body>
           <Main />
