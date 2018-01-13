@@ -1,10 +1,12 @@
-import { map, filter, range, random, slice, without } from 'lodash/fp'
+import { remove, map, range } from 'ramda'
+import _ from 'lodash'
 import React from 'react'
 import styled from 'styled-components'
 
 const COL_SIZE = 40
 const COL_NUMBERS = 8
 const BOX_WIDTH = COL_SIZE * COL_NUMBERS + 60
+const initialRemaining = range(1, 100)
 
 const TableContainer = styled.div`
   display: grid;
@@ -49,7 +51,6 @@ const Divider = styled.div`
   margin-bottom: 24px;
 `
 
-const initialRemaining = range(1, 101)
 const initialState = {
   remaining: initialRemaining,
   used: [],
@@ -62,8 +63,8 @@ class Page extends React.Component {
     const { remaining } = this.state
 
     if (remaining.length === 0) return
-    const randomNumber = random(0, remaining.length - 1)
-    const slicedList = remaining.filter((val, index) => index !== randomNumber)
+    const randomNumber = _.random(0, remaining.length - 1)
+    const slicedList = remove(randomNumber, 1)(remaining)
     const latestAnswer = remaining[randomNumber]
 
     this.setState({
@@ -93,7 +94,7 @@ class Page extends React.Component {
               <h4 className="card-title">Remaining</h4>
               <TableContainer>
                 {map(num => (
-                  <NumDiv>
+                  <NumDiv key={num}>
                     <span className="badge badge-pill badge-outline-success">
                       {num}
                     </span>
@@ -107,7 +108,7 @@ class Page extends React.Component {
               <h4 className="card-title">Used</h4>
               <TableContainer>
                 {map(num => (
-                  <NumDiv>
+                  <NumDiv key={num}>
                     <span className="badge badge-pill badge-outline-danger">
                       {num}
                     </span>
@@ -118,7 +119,12 @@ class Page extends React.Component {
           </div>
           <Flex>
             <button
-              className="btn btn-primary shake"
+              className={`btn btn-primary ${
+                this.state.remaining.length === 0
+                  ? ''
+                  : 'animated pulse infinite'
+              }`}
+              disabled={this.state.remaining.length === 0}
               onClick={this.onClickRandom}
             >
               Random &rarr;
